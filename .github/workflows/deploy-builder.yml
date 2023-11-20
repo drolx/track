@@ -1,0 +1,40 @@
+name: deploy builder container image
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy-builder:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+          ref: main
+          fetch-depth: 0
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image Trace
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/Dockerfile.builder
+          push: true
+          tags: ghcr.io/drolx/traccar-builder:latest,ghcr.io/drolx/traccar-builder:5.9
+          labels: ${{ steps.meta.outputs.labels }}
+
