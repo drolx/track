@@ -3,7 +3,7 @@ name: deploy builder container image
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 
 jobs:
   deploy-builder:
