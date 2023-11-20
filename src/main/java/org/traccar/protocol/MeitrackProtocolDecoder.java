@@ -471,6 +471,9 @@ public class MeitrackProtocolDecoder extends BaseProtocolDecoder {
                     case 0x1A:
                         position.set(Position.KEY_POWER, buf.readUnsignedShortLE() * 0.01);
                         break;
+                    case 0x29:
+                        position.set(Position.KEY_FUEL_LEVEL, buf.readUnsignedShortLE() * 0.01);
+                        break;
                     case 0x40:
                         position.set(Position.KEY_EVENT, buf.readUnsignedShortLE());
                         break;
@@ -583,6 +586,20 @@ public class MeitrackProtocolDecoder extends BaseProtocolDecoder {
                         buf.readUnsignedByte(); // alarm protocol
                         buf.readUnsignedByte(); // alarm type
                         buf.skipBytes(length - 2);
+                        break;
+                    case 0xFE73:
+                        buf.readUnsignedByte(); // version
+                        position.set(
+                                "tagName",
+                                buf.readCharSequence(buf.readUnsignedByte(), StandardCharsets.US_ASCII).toString());
+                        buf.skipBytes(6); // mac
+                        position.set("tagBattery", buf.readUnsignedByte());
+                        position.set("tagTemp", buf.readUnsignedShortLE() / 256.0);
+                        position.set("tagHumidity", buf.readUnsignedShortLE() / 256.0);
+                        buf.readUnsignedShortLE(); // high temperature threshold
+                        buf.readUnsignedShortLE(); // low temperature threshold
+                        buf.readUnsignedShortLE(); // high humidity threshold
+                        buf.readUnsignedShortLE(); // low humidity threshold
                         break;
                     case 0xFEA8:
                         for (int k = 1; k <= 3; k++) {

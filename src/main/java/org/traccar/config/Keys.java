@@ -1168,6 +1168,15 @@ public final class Keys {
             List.of(KeyType.CONFIG));
 
     /**
+     * If the event time is too old, we should not send notifications. This parameter is the threshold value in
+     * milliseconds. Default value is 15 minutes.
+     */
+    public static final ConfigKey<Long> NOTIFICATOR_TIME_THRESHOLD = new LongConfigKey(
+            "notificator.timeThreshold",
+            List.of(KeyType.CONFIG),
+            15 * 60 * 1000L);
+
+    /**
      * Traccar notification API key.
      */
     public static final ConfigKey<String> NOTIFICATOR_TRACCAR_KEY = new StringConfigKey(
@@ -1551,13 +1560,6 @@ public final class Keys {
      */
     public static final ConfigKey<String> GEOCODER_URL = new StringConfigKey(
             "geocoder.url",
-            List.of(KeyType.CONFIG));
-
-    /**
-     * App id for use with Here provider.
-     */
-    public static final ConfigKey<String> GEOCODER_ID = new StringConfigKey(
-            "geocoder.id",
             List.of(KeyType.CONFIG));
 
     /**
