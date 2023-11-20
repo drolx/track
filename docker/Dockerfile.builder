@@ -15,7 +15,7 @@ USER root
 WORKDIR /tmp
 RUN apt update && \
     apt upgrade -y && \
-    apt install -y wget unzip openjdk-17-jdk
+    apt install -y wget unzip zip openjdk-17-jdk
 
 # Install sencha tool
 RUN wget "https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip" && \
