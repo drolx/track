@@ -91,8 +91,8 @@ prepare () {
   cp ../target/lib/* out/lib
   cp ../schema/* out/schema
   cp -r ../templates/* out/templates
-  cp -r ../traccar-web/web/* out/legacy
-  cp -r ../traccar-web/modern/build/* out/modern
+  cp -r ../track-web/web/* out/legacy
+  cp -r ../track-web/modern/build/* out/modern
   cp default.xml out/conf
   cp traccar.xml out/conf
 
