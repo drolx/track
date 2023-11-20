@@ -22,7 +22,7 @@ RUN wget "https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.
     unzip SenchaCmd-*.zip && \
     ./SenchaCmd-*.sh -q
 
-##Set environment
+## Set environment
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH="${PATH}:$JAVA_HOME/bin/"
 ENV PATH="${PATH}:$HOME/bin/Sencha/Cmd/"
