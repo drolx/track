@@ -49,11 +49,28 @@ jobs:
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
       
+      - name: Extract info
+        run: |
+          echo $SOURCE_NAME
+          echo $SOURCE_BRANCH
+          echo $SOURCE_TAG
+        env:
+          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
+      
       - name: Get tag version
-        run: echo "_VERSION=`echo ${PATCH#v*}`" >> $GITHUB_ENV
+        run: echo "_VERSION=`echo ${SOURCE_TAG#v*}`" >> $GITHUB_ENV
       
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
         run: |
+          echo "SOURCE_TAG::: $SOURCE_TAG"
+          echo "env.SOURCE_TAG::: ${{ env.SOURCE_TAG }}"
+          echo "_VERSION::: $_VERSION"
+          echo "env._VERSION::: ${{ env._VERSION }}"
+           echo "PATCH::: $PATCH"
+          echo "env.PATCH::: ${{ env.PATCH }}"
+
           VERSION="${{ env._VERSION }}"
           _MAJOR_VERSION=${VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
