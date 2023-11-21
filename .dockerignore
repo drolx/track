@@ -12,8 +12,6 @@
 **/docker-compose*
 **/Dockerfile*
 **/node_modules
-**/package-lock.json
-**/pnpm-lock.yaml
 **/npm-debug.log
 **/.docker
 LICENSE
