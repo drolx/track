@@ -47,7 +47,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
-        if: github.ref == 'refs/heads/master'
         run: |
           echo "VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
           _VERSION=${VERSION#v*}
