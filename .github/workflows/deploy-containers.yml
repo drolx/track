@@ -45,16 +45,15 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
-      # - name: Get tag version
-      #   run: echo "_TAG_NUMBER=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
 
       - name: Extract version from tag
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
       
+      - name: Get tag version
+        run: echo "_VERSION=`echo ${PATCH#v*}`" >> $GITHUB_ENV
+      
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
         run: |
-          _VERSION=${PATCH#v*}
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
