@@ -47,10 +47,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set version
-        run: echo "_VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
+        run: echo "VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
 
       - name: Set environment DOCKERHUB_IMAGE_TAGS
         run: |
+          _VERSION=${VERSION#v*}
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
