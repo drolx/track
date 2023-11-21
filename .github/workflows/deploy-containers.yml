@@ -1,15 +1,21 @@
 ---
 name: Build and push docker images
 
-env:
-  VERSION: 5.10
-  REGISTRY: ghcr.io
-  DOCKERHUB_REPOSITORY: ghcr.io/${{ github.repository }}
+# on:
+#   release:
+#     types: [published]
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        default: 'preview'
+
+env:
+  REGISTRY: ghcr.io
+  DOCKERHUB_REPOSITORY: ghcr.io/${{ github.repository }}
 
 defaults:
   run:
@@ -32,7 +38,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
-          ref: main
+          ref: master
           fetch-depth: 0
       
       - name: Set up QEMU
@@ -48,6 +54,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
+      - name: Set version
+        run: echo "_VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
+      
       - name: Set environment DOCKERHUB_IMAGE_TAGS on master
         if: github.ref == 'refs/heads/master' && matrix.os == 'alpine'
         run: echo "DOCKERHUB_IMAGE_TAGS=$DOCKERHUB_REPOSITORY:latest" >> $GITHUB_ENV
@@ -55,7 +64,6 @@ jobs:
       - name: Set environment DOCKERHUB_IMAGE_TAGS
         if: github.ref != 'refs/heads/master'
         run: |
-          _VERSION=${{ env.VERSION }}
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
@@ -83,4 +91,6 @@ jobs:
           tags: ${{ env.DOCKERHUB_IMAGE_TAGS }}
           platforms: ${{ env.DOCKERHUB_IMAGE_PLATFORMS }}
           push: true
+          build-args: |
+            TRACCAR_VERSION=${{ env._VERSION }}
 
