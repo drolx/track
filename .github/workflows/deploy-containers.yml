@@ -2,6 +2,7 @@
 name: Build and push docker images
 
 env:
+  VERSION: 5.10
   REGISTRY: ghcr.io
   DOCKERHUB_REPOSITORY: ghcr.io/${{ github.repository }}
 
@@ -9,7 +10,6 @@ on:
   push:
     branches:
       - master
-      - v[0-9]+.[0-9]+
 
 defaults:
   run:
@@ -55,8 +55,7 @@ jobs:
       - name: Set environment DOCKERHUB_IMAGE_TAGS
         if: github.ref != 'refs/heads/master'
         run: |
-          _BRANCH=${GITHUB_REF##*/}
-          _VERSION=${_BRANCH#v*}
+          _VERSION=${{ env.VERSION }}
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
