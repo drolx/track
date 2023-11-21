@@ -3,3 +3,8 @@
 	url = ../track-web.git
 	branch = master
 	ignore = all
+[submodule "traccar-web"]
+	path = traccar-web
+	url = ../track-web.git
+	branch = master
+	ignore = all
