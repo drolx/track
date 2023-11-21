@@ -1,0 +1,23 @@
+FROM alpine:3 as base
+LABEL maintainer="Godwin peter .O <me@godwin.dev>"
+ENV TRACCAR_VERSION 5.9
+
+FROM ghcr.io/drolx/track-builder:latest as builder
+ENV TRACCAR_VERSION 5.9
+WORKDIR /src
+COPY . .
+RUN ./docker/build.sh $TRACCAR_VERSION
+
+
+FROM base as final
+WORKDIR /opt/traccar
+RUN set -ex && \
+    apk add --no-cache --no-progress openjdk11-jre-headless
+COPY --from=builder /src/setup/traccar-other-$TRACCAR_VERSION.zip /tmp/traccar.zip
+RUN unzip -qo /tmp/traccar.zip -d /opt/traccar && \
+    rm /tmp/traccar.zip
+
+# HEALTHCHECK --interval=35s --timeout=5s CMD curl -f http://localhost:8082/ || exit 1
+EXPOSE 8082
+ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
+CMD ["-jar", "tracker-server.jar", "conf/traccar.xml"]

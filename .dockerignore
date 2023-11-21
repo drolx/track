@@ -1,0 +1,20 @@
+# empty
+**/build
+**/.dockerignore
+**/target
+**/.gradle
+**/.idea
+**/.git
+**/.gitignore
+**/.project
+**/.settings
+**/bin
+**/docker-compose*
+**/Dockerfile*
+**/node_modules
+**/package-lock.json
+**/pnpm-lock.yaml
+**/npm-debug.log
+**/.docker
+LICENSE
+README.md
