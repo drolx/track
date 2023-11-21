@@ -1,5 +1,5 @@
 #!/bin/bash
-TRACCAR_VERSION=${1:-5.9}
+TRACCAR_VERSION=${1:-5.10}
 
 echo "starting build for traccar $TRACCAR_VERSION"
 
