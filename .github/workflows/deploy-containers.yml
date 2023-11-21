@@ -54,7 +54,8 @@ jobs:
       
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
         run: |
-          _MAJOR_VERSION=${_VERSION%.*}
+          VERSION="${{ env._VERSION }}"
+          _MAJOR_VERSION=${VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:${{ matrix.os }}"
