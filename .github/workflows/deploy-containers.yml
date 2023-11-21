@@ -48,13 +48,8 @@ jobs:
       
       - name: Set version
         run: echo "_VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
-      
-      - name: Set environment DOCKERHUB_IMAGE_TAGS on master
-        if: github.ref == 'refs/heads/master' && matrix.os == 'alpine'
-        run: echo "DOCKERHUB_IMAGE_TAGS=$DOCKERHUB_REPOSITORY:latest" >> $GITHUB_ENV
-      
+
       - name: Set environment DOCKERHUB_IMAGE_TAGS
-        if: github.ref != 'refs/heads/master'
         run: |
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
@@ -63,6 +58,7 @@ jobs:
           if [ "${{ matrix.os }}" == "alpine" ]; then
             _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_VERSION"
             _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION"
+            _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:latest"
           fi
           echo "DOCKERHUB_IMAGE_TAGS=$_DOCKERHUB_IMAGE_TAGS" >> $GITHUB_ENV
       - name: Set environment DOCKERHUB_IMAGE_PLATFORMS
