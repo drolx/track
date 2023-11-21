@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           submodules: recursive
           fetch-depth: 0
@@ -45,15 +45,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: nowsprinting/check-version-format-action@v3
-        id: version
-        with:
-          prefix: 'v'
+      - name: Extract version from tag
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
+        
+      - name: Set and Retrieve Github ENV variables
+        shell: bash
+        run: |
+          # define variables
+          fullVersion="${{ env.MAJOR }}"
+          if [ "${{ env.MINOR }}" != "" ]; then
+            fullVersion+=".${{ env.MINOR }}"
+          elif [ "${{ env.PATCH }}" != "" ]; then
+            fullVersion+=".${{ env.PATCH }}"
+          fi
+
+          # set them as GitHub ENV variables
+          echo "FullVersion=$fullVersion" >> $GITHUB_ENV
+      
+      - name: output version number
+        run: |
+          echo "Full version output:: ${{ env.FullVersion }}"
       
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
         run: |
-          _VERSION="${{ steps.version.outputs.full_without_prefix }}"
-          _MAJOR_VERSION="${{ steps.version.outputs.major_without_prefix }}"
+          _VERSION="${{ env.FullVersion }}"
+          _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:${{ matrix.os }}"
@@ -82,5 +98,4 @@ jobs:
           platforms: ${{ env.DOCKERHUB_IMAGE_PLATFORMS }}
           push: true
           build-args: |
-            TRACCAR_VERSION=${{ steps.version.outputs.full_without_prefix }}
-
+            TRACCAR_VERSION=${{ env.MAJOR }}
