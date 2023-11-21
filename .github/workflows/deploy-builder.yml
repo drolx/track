@@ -23,7 +23,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
-          ref: main
+          ref: master
           fetch-depth: 0
       
       - name: Set up QEMU
