@@ -41,12 +41,7 @@ jobs:
       
       - name: Set environment DOCKERHUB_IMAGE_PLATFORMS
         run: |
-          _DOCKERHUB_IMAGE_PLATFORMS="linux/amd64"
-          if [ "${{ matrix.os }}" == "debian" ]; then
-            _DOCKERHUB_IMAGE_PLATFORMS+=",linux/arm64"
-          elif [ "${{ matrix.os }}" == "ubuntu" ]; then
-            _DOCKERHUB_IMAGE_PLATFORMS+=",linux/arm/v7,linux/arm64"
-          fi
+          _DOCKERHUB_IMAGE_PLATFORMS="linux/amd64,linux/arm64"
           echo "DOCKERHUB_IMAGE_PLATFORMS=$_DOCKERHUB_IMAGE_PLATFORMS" >> $GITHUB_ENV
 
       - name: Build and push Docker image Trace
