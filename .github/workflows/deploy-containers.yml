@@ -46,11 +46,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Set version
-        run: echo "VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
-
-      - name: Set environment DOCKERHUB_IMAGE_TAGS
+      - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
+        if: github.ref == 'refs/heads/master'
         run: |
+          echo "VERSION=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
           _VERSION=${VERSION#v*}
           _MAJOR_VERSION=${_VERSION%.*}
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
@@ -68,7 +67,7 @@ jobs:
           if [ "${{ matrix.os }}" == "debian" ]; then
             _DOCKERHUB_IMAGE_PLATFORMS+=",linux/arm64"
           elif [ "${{ matrix.os }}" == "ubuntu" ]; then
-            _DOCKERHUB_IMAGE_PLATFORMS+=",linux/arm/v7,linux/arm64"
+            _DOCKERHUB_IMAGE_PLATFORMS+=",linux/arm64"
           fi
           echo "DOCKERHUB_IMAGE_PLATFORMS=$_DOCKERHUB_IMAGE_PLATFORMS" >> $GITHUB_ENV
       - name: Build and push
