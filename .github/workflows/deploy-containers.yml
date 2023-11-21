@@ -1,17 +1,9 @@
 ---
 name: Build and push docker images
 
-# on:
-#   release:
-#     types: [published]
-
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version'
-        required: true
-        default: 'preview'
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
