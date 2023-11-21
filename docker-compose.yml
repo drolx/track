@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  # mysql:
+  #   image: yobasystems/alpine-mariadb
+  #   restart: always
+  #   volumes:
+  #     - mysql:/var/lib/mysql
+  #   environment:
+  #       - MYSQL_ROOT_PASSWORD=traccar
+  #       - MYSQL_DATABASE=traccar
+  #       - MYSQL_USER=traccar
+  #       - MYSQL_PASSWORD=traccar
+  #       - MYSQL_CHARSET=utf8mb4
+  #       - MYSQL_COLLATION=utf8mb4_unicode_ci
+
+  builder:
+    image: ghcr.io/drolx/track-builder:latest
+    build:
+      context: docker
+      dockerfile: Dockerfile.builder
+
+  alpine:
+    image: ghcr.io/drolx/track:alpine
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.alpine
+    ports:
+      - 8082:8082
+

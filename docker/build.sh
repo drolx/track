@@ -12,15 +12,13 @@ echo "starting build for traccar $TRACCAR_VERSION"
 # Build traccar-web
 {
     echo 'build client output...'
-    cd /src/track-web
-    ./traccar-web/tools/package.sh
+    ./track-web/tools/package.sh
 }
 
 
 # package build outputs
 {
-    echo 'Package build outputs...'
-    cd /src/setup
+    echo 'package build outputs...'
+    cd setup
     ./package.sh $TRACCAR_VERSION other
 }
-
