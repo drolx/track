@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [alpine]
+        os: [alpine, debian, ubuntu]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

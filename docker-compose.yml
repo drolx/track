@@ -28,6 +28,22 @@ services:
       dockerfile: docker/Dockerfile.alpine
       args:
         TRACCAR_VERSION: 5.10
-    ports:
-      - 8082:8082
+  
+  debian:
+    image: ghcr.io/drolx/track:debian
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.debian
+      args:
+        TRACCAR_VERSION: 5.10
+  
+  ubuntu:
+    image: ghcr.io/drolx/track:ubuntu
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ubuntu
+      args:
+        TRACCAR_VERSION: 5.10
 
