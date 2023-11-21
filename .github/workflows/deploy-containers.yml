@@ -24,13 +24,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [alpine, debian, ubuntu]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
-          ref: master
           fetch-depth: 0
       
       - name: Set up QEMU
@@ -46,33 +45,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract version from tag
-        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
-      
-      - name: Extract info
-        run: |
-          echo $SOURCE_NAME
-          echo $SOURCE_BRANCH
-          echo $SOURCE_TAG
-        env:
-          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
-          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
-          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-      
-      - name: Get tag version
-        run: echo "_VERSION=`echo ${SOURCE_TAG#v*}`" >> $GITHUB_ENV
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
       
       - name: Set environment DOCKERHUB_IMAGE_TAGS and VERSION
         run: |
-          echo "SOURCE_TAG::: $SOURCE_TAG"
-          echo "env.SOURCE_TAG::: ${{ env.SOURCE_TAG }}"
-          echo "_VERSION::: $_VERSION"
-          echo "env._VERSION::: ${{ env._VERSION }}"
-           echo "PATCH::: $PATCH"
-          echo "env.PATCH::: ${{ env.PATCH }}"
-
-          VERSION="${{ env._VERSION }}"
-          _MAJOR_VERSION=${VERSION%.*}
+          _VERSION="${{ steps.version.outputs.full_without_prefix }}"
+          _MAJOR_VERSION="${{ steps.version.outputs.major_without_prefix }}"
           _DOCKERHUB_IMAGE_TAGS="$DOCKERHUB_REPOSITORY:$_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:$_MAJOR_VERSION-${{ matrix.os }}"
           _DOCKERHUB_IMAGE_TAGS+=",$DOCKERHUB_REPOSITORY:${{ matrix.os }}"
@@ -101,5 +82,5 @@ jobs:
           platforms: ${{ env.DOCKERHUB_IMAGE_PLATFORMS }}
           push: true
           build-args: |
-            TRACCAR_VERSION=${{ env._VERSION }}
+            TRACCAR_VERSION=${{ steps.version.outputs.full_without_prefix }}
 
