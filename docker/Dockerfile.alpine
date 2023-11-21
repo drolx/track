@@ -4,6 +4,7 @@ ENV TRACCAR_VERSION 5.10
 
 FROM ghcr.io/drolx/track-builder:latest as builder
 ENV TRACCAR_VERSION 5.10
+ENV PATH="${PATH}:$HOME/bin/Sencha/Cmd/"
 WORKDIR /src
 COPY . .
 RUN ./docker/build.sh $TRACCAR_VERSION
