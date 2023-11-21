@@ -19,12 +19,11 @@ jobs:
   docker-build-push:
     name: Build and push docker images
     runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
     permissions:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
         os: [alpine]
     steps:
