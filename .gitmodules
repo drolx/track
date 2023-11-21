@@ -1,5 +1,10 @@
+[submodule "track-web"]
+	path = track-web
+	url = ../track-web.git
+	branch = master
+	ignore = all
 [submodule "traccar-web"]
 	path = traccar-web
-	url = ../traccar-web.git
+	url = ../track-web.git
 	branch = master
 	ignore = all
