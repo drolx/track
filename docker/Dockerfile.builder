@@ -22,9 +22,11 @@ RUN wget "https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.
     ./SenchaCmd-*.sh -q
 
 ## Set environment
-RUN echo 'export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"' >> /etc/bash.bashrc
-RUN echo 'export PATH="\$PATH:\$JAVA_HOME/bin/"' >> /etc/bash.bashrc
-RUN echo 'export PATH="\$PATH:\$HOME/bin/Sencha/Cmd/"' >> /etc/bash.bashrc
-RUN . $HOME/.bashrc
+ENV HOME=/root
+RUN echo '\n' >> $HOME/.bashrc
+RUN echo 'export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"' >> $HOME/.bashrc
+RUN echo 'export PATH="${PATH}:$JAVA_HOME/bin/"' >> $HOME/.bashrc
+RUN echo 'export PATH="${PATH}:$HOME/bin/Sencha/Cmd/"' >> $HOME/.bashrc
+ENV PATH="${PATH}:$HOME/bin/Sencha/Cmd/"
 
 RUN rm -rf /tmp/* && apt clean
