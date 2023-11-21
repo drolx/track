@@ -1,6 +1,6 @@
 FROM docker.io/library/debian:bookworm-slim as base
 
-FROM docker.io/library/node:lts-bookworm-slim AS node
+FROM docker.io/library/node:18-bookworm-slim AS node
 
 FROM base as builder
 LABEL maintainer="Godwin peter .O <me@godwin.dev>"
@@ -11,12 +11,11 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
-USER root
-WORKDIR /tmp
 RUN apt update && \
     apt upgrade -y && \
     apt install -y wget unzip zip openjdk-17-jdk
 
+WORKDIR /tmp
 # Install sencha tool
 RUN wget "https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip" && \
     unzip SenchaCmd-*.zip && \
