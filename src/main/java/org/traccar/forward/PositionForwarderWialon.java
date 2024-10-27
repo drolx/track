@@ -31,8 +31,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 public class PositionForwarderWialon implements PositionForwarder {
 
@@ -74,7 +76,7 @@ public class PositionForwarderWialon implements PositionForwarder {
         String uniqueId = positionData.getDevice().getUniqueId();
 
         String payload = String.format(
-                "%s;%02d%.5f;%s;%03d%.5f;%s;%d;%d;%d;NA;NA;NA;NA;;%s;NA",
+                "%s;%02d%.5f;%s;%03d%.5f;%s;%d;%d;%d;NA;NA;NA;NA;;%s;%s",
                 dateFormat.format(position.getFixTime()),
                 (int) Math.abs(position.getLatitude()),
                 Math.abs(position.getLatitude()) % 1 * 60,
@@ -85,7 +87,8 @@ public class PositionForwarderWialon implements PositionForwarder {
                 (int) UnitsConverter.kphFromKnots(position.getSpeed()),
                 (int) position.getCourse(),
                 (int) position.getAltitude(),
-                position.getString(Position.KEY_DRIVER_UNIQUE_ID, "NA"));
+                position.getString(Position.KEY_DRIVER_UNIQUE_ID, "NA"),
+                formatAttributes(position.getAttributes()));
 
         String message;
         if (version.startsWith("2")) {
@@ -106,6 +109,26 @@ public class PositionForwarderWialon implements PositionForwarder {
         } catch (IOException e) {
             resultHandler.onResult(false, e);
         }
+    }
+
+    public static String formatAttributes(Map<String, Object> attributes) {
+        if (attributes.isEmpty()) {
+            return "NA";
+        }
+        return attributes.entrySet().stream()
+                .map(entry -> {
+                    Object value = entry.getValue();
+                    int type;
+                    if (value instanceof Double || value instanceof Float) {
+                        type = 2;
+                    } else if (value instanceof Number) {
+                        type = 1;
+                    } else {
+                        type = 3;
+                    }
+                    return entry.getKey() + ":" + type + ":" + value;
+                })
+                .collect(Collectors.joining(","));
     }
 
 }
