@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: '6.5'
+  version: '6.6'
 servers:
   - url: https://demo.traccar.org/api
     description: Demo Server 1
@@ -599,6 +599,24 @@ paths:
           content: {}
         '400':
           description: Bad Request
+          content: {}
+  /positions/{id}:
+    delete:
+      summary: Delete a Position
+      tags:
+        - Positions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '404':
+          description: Not Found
           content: {}
   /server:
     get:
@@ -1781,12 +1799,14 @@ components:
           type: string
         phone:
           type: string
+          nullable: true
         readonly:
           type: boolean
         administrator:
           type: boolean
         map:
           type: string
+          nullable: true
         latitude:
           type: number
         longitude:
@@ -1797,12 +1817,14 @@ components:
           type: string
         coordinateFormat:
           type: string
+          nullable: true
         disabled:
           type: boolean
         expirationTime:
           type: string
           description: in IS0 8601 format. eg. `1963-11-22T18:30:00Z`
           format: date-time
+          nullable: true
         deviceLimit:
           type: integer
         userLimit:
@@ -1815,6 +1837,7 @@ components:
           type: boolean
         poiLayer:
           type: string
+          nullable: true
         attributes:
           type: object
           properties: {}
@@ -1889,18 +1912,25 @@ components:
           type: string
           description: in IS0 8601 format. eg. `1963-11-22T18:30:00Z`
           format: date-time
+          nullable: true
         positionId:
           type: integer
+          nullable: true
         groupId:
           type: integer
+          nullable: true
         phone:
           type: string
+          nullable: true
         model:
           type: string
+          nullable: true
         contact:
           type: string
+          nullable: true
         category:
           type: string
+          nullable: true
         attributes:
           type: object
           properties: {}
