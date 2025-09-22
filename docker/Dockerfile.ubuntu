@@ -3,6 +3,14 @@ LABEL maintainer="Godwin peter .O <peter@drolx.com>"
 ARG TRACCAR_VERSION=6.8
 ENV TRACCAR_VERSION=${TRACCAR_VERSION}
 
+FROM eclipse-temurin:21-jammy AS jdk
+RUN jlink --module-path $JAVA_HOME/jmods \
+    --add-modules java.se,jdk.charsets,jdk.crypto.ec,jdk.unsupported \
+    --strip-debug --no-header-files --no-man-pages --compress=2 --output /jre
+
+FROM ubuntu:24.04
+COPY --from=package /traccar /opt/traccar
+COPY --from=jdk /jre /opt/traccar/jre
 WORKDIR /opt/traccar
 RUN set -ex && \
     apt update && \

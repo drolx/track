@@ -81,7 +81,6 @@ import org.traccar.handler.FilterHandler;
 import org.traccar.handler.GeocoderHandler;
 import org.traccar.handler.GeolocationHandler;
 import org.traccar.handler.SpeedLimitHandler;
-import org.traccar.handler.TimeHandler;
 import org.traccar.helper.LogAction;
 import org.traccar.helper.ObjectMapperContextResolver;
 import org.traccar.helper.WebHelper;
@@ -198,7 +197,7 @@ public class MainModule extends AbstractModule {
     }
 
     @Provides
-    public static WebServer provideWebServer(Injector injector, Config config) {
+    public static WebServer provideWebServer(Injector injector, Config config) throws IOException {
         if (config.getInteger(Keys.WEB_PORT) > 0) {
             return new WebServer(injector, config);
         }
@@ -320,15 +319,6 @@ public class MainModule extends AbstractModule {
             Config config, CacheManager cacheManager, Storage storage, StatisticsManager statisticsManager) {
         if (config.getBoolean(Keys.FILTER_ENABLE)) {
             return new FilterHandler(config, cacheManager, storage, statisticsManager);
-        }
-        return null;
-    }
-
-    @Singleton
-    @Provides
-    public static TimeHandler provideTimeHandler(Config config) {
-        if (config.hasKey(Keys.TIME_OVERRIDE)) {
-            return new TimeHandler(config);
         }
         return null;
     }

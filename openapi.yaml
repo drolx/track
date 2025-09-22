@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: '6.8.1'
+  version: '6.10.0'
 servers:
   - url: https://demo.traccar.org/api
     description: Demo Server 1
@@ -1761,8 +1761,6 @@ components:
           type: string
           description: in ISO 8601 format. eg. `1963-11-22T18:30:00Z`
           format: date-time
-        outdated:
-          type: boolean
         valid:
           type: boolean
         latitude:
